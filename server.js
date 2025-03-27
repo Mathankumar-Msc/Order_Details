@@ -86,6 +86,39 @@ app.post("/update-status", async (req, res) => {
         res.status(500).json({ message: "Failed to send email" });
     }
 });
+app.post("/send", async (req, res) => {
+    const { email, subject, text } = req.body;
+
+    if (!email || !subject || !text) {
+        return res.status(400).json({ message: "Missing email, subject or text" });
+        
+    }
+
+    try {
+        // Email content
+        const mailOptions = {
+            from: `"Order Updates" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: subject,
+            html: `
+                <p>Hello,</p>
+                <p>${text}</p>
+                <p>Thank you for your order!</p>`
+   
+        };
+
+        // Send email
+        await transporter.sendMail(mailOptions);
+
+        res.status(200).json({ message: `Email sent to ${email}` });
+    } catch (error) {
+        console.error("Email error:", error);
+        res.status(500).json({ message: "Failed to send email" });
+    }
+});
+
+
+
 
 // Start Server
 app.listen(PORT, () => {
