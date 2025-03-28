@@ -97,13 +97,15 @@ app.post("/send", async (req, res) => {
     try {
         // Email content
         const mailOptions = {
-            from: `"Order Updates" <${process.env.EMAIL_USER}>`,
+            from: `<${process.env.EMAIL_USER}>`,
             to: email,
             subject: subject,
-            html: `
-                <p>Hello,</p>
-                <p>${text}</p>
-                <p>Thank you for your order!</p>`
+           html: `
+    <p>Hello,</p>
+    <p>${text.replace(/\n/g, '<br>')}</p>
+    <p>Thank you for your order!</p>
+`
+
    
         };
 
